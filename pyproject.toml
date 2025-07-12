@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "esp-miner-e2e"
+version = "0.1.0"
+description = "Cross-platform end-to-end test framework for ESP-Miner firmware"
+authors = [
+    {name = "ESP-Miner Contributors", email = "dev@example.com"}
+]
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "GPL-3.0-or-later"}
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+    "Operating System :: OS Independent",
+]
+
+[project.scripts]
+esp-miner-e2e = "esp_miner_e2e.cli:main"
+
+[project.optional-dependencies]
+dev = ["pytest", "pytest-cov", "black", "mypy"]
+
+[tool.setuptools]
+packages = ["esp_miner_e2e"]
