@@ -1,0 +1,45 @@
+version: "3.9"
+
+x-runner-common: &runner_common
+  build: .
+  environment:
+    GH_OWNER: bitaxeorg
+    RUNNER_TOKEN: ${RUNNER_TOKEN}
+    EPHEMERAL: "1"
+    # Shared test config for all runners
+    SELENIUM_URL: "http://selenium:4444/wd/hub"
+    LABELS_COMMON: "bitaxe"
+  volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+  depends_on: [selenium]
+  restart: always
+  privileged: false
+
+services:
+  selenium:
+    image: selenium/standalone-chrome:4.34.0-20250707
+    shm_size: 2g
+    environment:
+      - SE_SESSION_REQUEST_TIMEOUT=0
+      - SE_NODE_MAX_SESSIONS=2
+    restart: unless-stopped
+
+  runner_usb0:
+    <<: *runner_common
+    environment:
+      <<: *runner_common.environment
+      HW_PORT: "/dev/ttyUSB0"
+      LABELS_EXTRA: "204"
+      LABELS: "${LABELS_COMMON},${LABELS_EXTRA}"
+    devices:
+      - "/dev/ttyUSB0:/dev/ttyUSB0"
+
+  runner_usb1:
+    <<: *runner_common
+    environment:
+      <<: *runner_common.environment
+      HW_PORT: "/dev/ttyUSB1"
+      LABELS_EXTRA: "201"
+      LABELS: "${LABELS_COMMON},${LABELS_EXTRA}"
+    devices:
+      - "/dev/ttyUSB1:/dev/ttyUSB1"
